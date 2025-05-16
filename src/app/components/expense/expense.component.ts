@@ -15,6 +15,8 @@ import { CommonModule } from '@angular/common';
 })
 export class ExpenseComponent {
   expenseFrom!: FormGroup;
+  expenses: any[] = [];
+
   listOfCategory: any[] = [
     'Education',
     'Groceries',
@@ -40,6 +42,8 @@ export class ExpenseComponent {
       category: [null, Validators.required],
       description: [null, Validators.required],
     });
+
+    this.loadExpenses();
   }
 
   submitForm() {
@@ -58,5 +62,12 @@ export class ExpenseComponent {
           nzDuration: 5000,
         });
       });
+  }
+
+  loadExpenses() {
+    this.expenseService.getAllExpenses().subscribe((data) => {
+      this.expenses = data;
+      console.log(this.expenses);
+    });
   }
 }

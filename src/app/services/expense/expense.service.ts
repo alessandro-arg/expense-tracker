@@ -18,7 +18,7 @@ export class ExpenseService {
     return addDoc(expensesRef, expense);
   }
 
-  getExpenses(): Observable<any[]> {
+  getAllExpenses(): Observable<any[]> {
     const expensesRef = collection(this.firestore, 'expenses');
     return collectionData(expensesRef, { idField: 'id' });
   }
