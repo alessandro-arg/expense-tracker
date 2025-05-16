@@ -49,17 +49,21 @@ export class ExpenseComponent {
   submitForm() {
     if (this.expenseFrom.invalid) return;
 
+    const formValue = this.expenseFrom.value;
+    const rawAmount = ('' + formValue.amount).replace(',', '.');
+    formValue.amount = Number(parseFloat(rawAmount).toFixed(2));
+
     this.expenseService
-      .postExpense(this.expenseFrom.value)
+      .postExpense(formValue)
       .then(() => {
         this.message.success('Expense created successfully', {
-          nzDuration: 5000,
+          nzDuration: 3000,
         });
         this.expenseFrom.reset();
       })
       .catch(() => {
         this.message.error('Error while posting expense', {
-          nzDuration: 5000,
+          nzDuration: 3000,
         });
       });
   }
