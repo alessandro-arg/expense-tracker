@@ -1,16 +1,25 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import {
+  Firestore,
+  collection,
+  addDoc,
+  collectionData,
+} from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
-
-const BASIC_URL = 'http://localhost:8080/';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ExpenseService {
-  constructor(private http: HttpClient) {}
+  constructor(private firestore: Firestore) {}
 
-  postExpense(expenseDTO: any): Observable<any> {
-    return this.http.post(BASIC_URL + 'api/expense', expenseDTO);
+  postExpense(expense: any): Promise<any> {
+    const expensesRef = collection(this.firestore, 'expenses');
+    return addDoc(expensesRef, expense);
+  }
+
+  getExpenses(): Observable<any[]> {
+    const expensesRef = collection(this.firestore, 'expenses');
+    return collectionData(expensesRef, { idField: 'id' });
   }
 }

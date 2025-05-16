@@ -4,11 +4,12 @@ import { RouterModule } from '@angular/router';
 import { ZORRO_MODULES } from '../../zorro-imports';
 import { ExpenseService } from '../../services/expense/expense.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-expense',
   standalone: true,
-  imports: [RouterModule, ZORRO_MODULES],
+  imports: [RouterModule, CommonModule, ZORRO_MODULES],
   templateUrl: './expense.component.html',
   styleUrl: './expense.component.scss',
 })
@@ -42,15 +43,20 @@ export class ExpenseComponent {
   }
 
   submitForm() {
-    this.expenseService.postExpense(this.expenseFrom.value).subscribe(
-      (res) => {
-        this.message.success('Expense created succesfully', {
+    if (this.expenseFrom.invalid) return;
+
+    this.expenseService
+      .postExpense(this.expenseFrom.value)
+      .then(() => {
+        this.message.success('Expense created successfully', {
           nzDuration: 5000,
         });
-      },
-      (error) => {
-        this.message.error('Error while posting expense', { nzDuration: 5000 });
-      }
-    );
+        this.expenseFrom.reset();
+      })
+      .catch(() => {
+        this.message.error('Error while posting expense', {
+          nzDuration: 5000,
+        });
+      });
   }
 }
