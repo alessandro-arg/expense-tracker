@@ -6,6 +6,6 @@ export const environment = {
     projectId: 'expense-tracker-6b6ec',
     storageBucket: 'expense-tracker-6b6ec.firebasestorage.app',
     messagingSenderId: '1032168343913',
-    appId: '1:1032168343913:web:25d401707a26ebae40d5f8',
+    appId: '1:1032168343913:web:a450b16239fe5dad40d5f8',
   },
 };
