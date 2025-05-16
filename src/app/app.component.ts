@@ -6,7 +6,7 @@ import { ZORRO_MODULES } from './zorro-imports';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, ZORRO_MODULES],
+  imports: [CommonModule, RouterOutlet, ZORRO_MODULES],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
