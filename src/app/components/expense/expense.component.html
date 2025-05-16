@@ -1,1 +1,76 @@
-<p>expense works!</p>
+<div>
+  <div nz-row>
+    <div nz-col nzFlex="2">
+      <nz-card
+        nzType="inner"
+        style="margin-top: 16px"
+        nzTitle="Post new expense"
+      >
+        <form nz-form [formGroup]="expenseFrom" class="custom-form">
+          <nz-form-item>
+            <nz-form-control nzErrorTip="Please enter a title.">
+              <input
+                type="text"
+                nz-input
+                formControlName="title"
+                placeholder="Enter the title"
+              />
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-control nzErrorTip="Please enter an amount.">
+              <input
+                type="number"
+                nz-input
+                formControlName="amount"
+                placeholder="Enter the amount"
+              />
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-control nzErrorTip="Please enter a date.">
+              <nz-date-picker
+                style="width: 100%"
+                formControlName="date"
+              ></nz-date-picker>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-control>
+              <textarea
+                nz-input
+                placeholder="Enter a description"
+                [nzAutosize]="{ minRows: 2, maxRows: 6 }"
+                formControlName="description"
+              ></textarea>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item nzErrorTip="Please enter a category.">
+            <nz-form-control>
+              <nz-select
+                nzAllowClear
+                nzPlaceHolder="Select the category"
+                formControlName="category"
+              >
+                <nz-option
+                  *ngFor="let category of listOfCategory"
+                  [nzLabel]="category"
+                  [nzValue]="category"
+                ></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+          <button
+            nz-button
+            nzType="primary"
+            nzBlock
+            [disabled]="expenseFrom.invalid"
+            class="w-100"
+          >
+            Post expense
+          </button>
+        </form>
+      </nz-card>
+    </div>
+  </div>
+</div>
