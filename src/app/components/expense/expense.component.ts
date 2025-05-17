@@ -74,4 +74,19 @@ export class ExpenseComponent {
       console.log(this.expenses);
     });
   }
+
+  deleteExpense(id: string) {
+    this.expenseService
+      .deleteExpense(id)
+      .then(() => {
+        this.message.success('Expense deleted with success', {
+          nzDuration: 3000,
+        });
+      })
+      .catch(() => {
+        this.message.error('Error while deleting expense', {
+          nzDuration: 3000,
+        });
+      });
+  }
 }

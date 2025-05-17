@@ -98,13 +98,14 @@
                 nz-icon
                 nzType="edit"
                 nzTheme="fill"
-                style="color: blue"
+                style="color: rgb(96, 96, 255)"
               ></span>
               <span
                 nz-icon
                 nzType="delete"
                 nzTheme="fill"
-                style="color: red; margin-left: 10px"
+                style="color: rgb(255, 66, 66); margin-left: 10px"
+                (click)="deleteExpense(expense.id)"
               ></span>
             </div>
           </div>
