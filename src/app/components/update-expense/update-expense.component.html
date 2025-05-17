@@ -1,11 +1,7 @@
 <div>
   <div nz-row>
     <div nz-col nzFlex="2">
-      <nz-card
-        nzType="inner"
-        style="margin-top: 16px"
-        nzTitle="Post new expense"
-      >
+      <nz-card nzType="inner" style="margin-top: 16px" nzTitle="Update expense">
         <form
           nz-form
           [formGroup]="expenseFrom"
@@ -72,45 +68,9 @@
             [disabled]="expenseFrom.invalid"
             class="w-100"
           >
-            Post expense
+            Update expense
           </button>
         </form>
-      </nz-card>
-    </div>
-    <div nz-col nzFlex="3" style="margin-left: 20px">
-      <nz-card nzType="inner" style="margin-top: 16px" nzTitle="Last expenses">
-        <div nz-card-grid style="width: 100%" *ngFor="let expense of expenses">
-          <div nz-row>
-            <div nz-col nzSpan="18">
-              {{ expense.amount.toFixed(2).replace(".", ",") }} € -
-              <span nz-icon nzType="message" nzTheme="outline"></span>
-              {{ expense.title }}
-              -
-              <span nz-icon nzType="clock-circle" nzTheme="outline"></span>
-              {{ expense.date.toDate() | date : "dd/MM/yyyy" }}
-              {{ expense.date.toDate() | date : "HH:mm" }}
-              -
-              <span nz-icon nzType="comment" nzTheme="outline"></span>
-              {{ expense.category }}
-            </div>
-            <div nz-col nzSpan="6" style="font-size: 15px">
-              <span
-                nz-icon
-                nzType="edit"
-                nzTheme="fill"
-                style="color: rgb(96, 96, 255)"
-                (click)="updateExpense(expense.id)"
-              ></span>
-              <span
-                nz-icon
-                nzType="delete"
-                nzTheme="fill"
-                style="color: rgb(255, 66, 66); margin-left: 10px"
-                (click)="deleteExpense(expense.id)"
-              ></span>
-            </div>
-          </div>
-        </div>
       </nz-card>
     </div>
   </div>

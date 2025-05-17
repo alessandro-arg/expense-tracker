@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { ZORRO_MODULES } from '../../zorro-imports';
 import { ExpenseService } from '../../services/expense/expense.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
@@ -31,7 +31,8 @@ export class ExpenseComponent {
   constructor(
     private fb: FormBuilder,
     private expenseService: ExpenseService,
-    private message: NzMessageService
+    private message: NzMessageService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -73,6 +74,10 @@ export class ExpenseComponent {
       this.expenses = data;
       console.log(this.expenses);
     });
+  }
+
+  updateExpense(id: string) {
+    this.router.navigateByUrl(`/expense/${id}/edit`);
   }
 
   deleteExpense(id: string) {
