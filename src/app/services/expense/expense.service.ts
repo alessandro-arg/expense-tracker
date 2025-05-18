@@ -4,6 +4,7 @@ import {
   collection,
   addDoc,
   collectionData,
+  docData,
 } from '@angular/fire/firestore';
 import { doc, deleteDoc } from 'firebase/firestore';
 import { Observable } from 'rxjs';
@@ -27,5 +28,10 @@ export class ExpenseService {
   deleteExpense(id: string): Promise<any> {
     const expenseDocRef = doc(this.firestore, 'expenses', id);
     return deleteDoc(expenseDocRef);
+  }
+
+  getExpenseById(id: string): Observable<any> {
+    const expenseDocRef = doc(this.firestore, 'expenses', id);
+    return docData(expenseDocRef, { idField: 'id' });
   }
 }
