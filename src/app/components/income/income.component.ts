@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { Router } from '@angular/router';
+import { IncomeService } from '../../services/income/income.service';
 
 @Component({
   selector: 'app-income',
@@ -27,7 +28,8 @@ export class IncomeComponent {
   constructor(
     private fb: FormBuilder,
     private message: NzMessageService,
-    private router: Router
+    private router: Router,
+    private incomeService: IncomeService
   ) {}
 
   ngOnInit() {
@@ -38,5 +40,18 @@ export class IncomeComponent {
       category: [null, [Validators.required]],
       description: [null, [Validators.required]],
     });
+  }
+
+  submitForm() {
+    this.incomeService
+      .postIncome(this.incomeForm.value)
+      .then(() => {
+        this.message.success('Income posted succefully', { nzDuration: 3000 });
+      })
+      .catch(() => {
+        this.message.error('Error while posting the income', {
+          nzDuration: 3000,
+        });
+      });
   }
 }
