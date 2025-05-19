@@ -70,7 +70,6 @@ export class ExpenseComponent {
   loadExpenses() {
     this.expenseService.getAllExpenses().subscribe((data) => {
       this.expenses = data;
-      console.log(this.expenses);
     });
   }
 

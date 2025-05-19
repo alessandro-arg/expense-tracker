@@ -4,7 +4,7 @@
       <nz-card nzType="inner" style="margin-top: 16px" nzTitle="Update expense">
         <form
           nz-form
-          [formGroup]="expenseFrom"
+          [formGroup]="expenseForm"
           (ngSubmit)="submitForm()"
           class="custom-form"
         >
@@ -65,7 +65,7 @@
             nz-button
             nzType="primary"
             nzBlock
-            [disabled]="expenseFrom.invalid"
+            [disabled]="expenseForm.invalid"
             class="w-100"
           >
             Update expense

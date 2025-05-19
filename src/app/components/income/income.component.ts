@@ -67,7 +67,6 @@ export class IncomeComponent {
   loadIncomes() {
     this.incomeService.getAllIncomes().subscribe((data) => {
       this.incomes = data;
-      console.log(this.incomes);
     });
   }
 
