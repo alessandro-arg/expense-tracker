@@ -48,8 +48,6 @@ export class ExpenseComponent {
   }
 
   submitForm() {
-    if (this.expenseFrom.invalid) return;
-
     const formValue = this.expenseFrom.value;
     const rawAmount = ('' + formValue.amount).replace(',', '.');
     formValue.amount = Number(parseFloat(rawAmount).toFixed(2));

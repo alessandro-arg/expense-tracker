@@ -6,7 +6,12 @@
         style="margin-top: 16px"
         nzTitle="Post new income"
       >
-        <form nz-form [formGroup]="incomeForm" class="custom-form">
+        <form
+          nz-form
+          [formGroup]="incomeForm"
+          class="custom-form"
+          (ngSubmit)="submitForm()"
+        >
           <nz-form-item>
             <nz-form-control nzErrorTip="Please enter a title.">
               <input

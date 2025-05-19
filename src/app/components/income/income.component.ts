@@ -43,8 +43,12 @@ export class IncomeComponent {
   }
 
   submitForm() {
+    const formValue = this.incomeForm.value;
+    const rawAmount = ('' + formValue.amount).replace(',', '.');
+    formValue.amount = Number(parseFloat(rawAmount).toFixed(2));
+
     this.incomeService
-      .postIncome(this.incomeForm.value)
+      .postIncome(formValue)
       .then(() => {
         this.message.success('Income posted succefully', { nzDuration: 3000 });
       })
