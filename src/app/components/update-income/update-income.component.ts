@@ -65,5 +65,20 @@ export class UpdateIncomeComponent {
     });
   }
 
-  submitForm() {}
+  submitForm() {
+    const updatedIncome = this.incomeForm.value;
+    this.incomeService
+      .updateIncome(this.id, updatedIncome)
+      .then(() => {
+        this.message.success('Income updated with success', {
+          nzDuration: 3000,
+        });
+        this.router.navigateByUrl('/income');
+      })
+      .catch(() => {
+        this.message.error('Error while updating income', {
+          nzDuration: 3000,
+        });
+      });
+  }
 }

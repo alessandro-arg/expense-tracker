@@ -25,8 +25,18 @@ export class IncomeService {
     return collectionData(incomesRef, { idField: 'id' });
   }
 
+  deleteIncome(id: string): Promise<any> {
+    const incomeDocRef = doc(this.firestore, 'incomes', id);
+    return deleteDoc(incomeDocRef);
+  }
+
   getIncomeById(id: string): Observable<any> {
     const IncomeDocRef = doc(this.firestore, 'incomes', id);
     return docData(IncomeDocRef, { idField: 'id' });
+  }
+
+  updateIncome(id: string, incomeData: any): Promise<void> {
+    const incomeDocRef = doc(this.firestore, 'incomes', id);
+    return updateDoc(incomeDocRef, incomeData);
   }
 }

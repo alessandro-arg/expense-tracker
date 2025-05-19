@@ -70,4 +70,19 @@ export class IncomeComponent {
       console.log(this.incomes);
     });
   }
+
+  deleteIncome(id: string) {
+    this.incomeService
+      .deleteIncome(id)
+      .then(() => {
+        this.message.success('Income deleted with success', {
+          nzDuration: 3000,
+        });
+      })
+      .catch(() => {
+        this.message.error('Error while deleting income', {
+          nzDuration: 3000,
+        });
+      });
+  }
 }
