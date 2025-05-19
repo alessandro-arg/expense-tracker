@@ -6,7 +6,7 @@ import {
   collectionData,
   docData,
 } from '@angular/fire/firestore';
-import { doc, deleteDoc } from 'firebase/firestore';
+import { doc, deleteDoc, updateDoc } from 'firebase/firestore';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -33,5 +33,10 @@ export class ExpenseService {
   getExpenseById(id: string): Observable<any> {
     const expenseDocRef = doc(this.firestore, 'expenses', id);
     return docData(expenseDocRef, { idField: 'id' });
+  }
+
+  updateExpense(id: string, expenseData: any): Promise<void> {
+    const expenseDocRef = doc(this.firestore, 'expenses', id);
+    return updateDoc(expenseDocRef, expenseData);
   }
 }

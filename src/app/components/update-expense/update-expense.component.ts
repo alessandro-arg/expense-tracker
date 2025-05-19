@@ -66,5 +66,20 @@ export class UpdateExpenseComponent {
     });
   }
 
-  submitForm() {}
+  submitForm() {
+    const updatedExpense = this.expenseFrom.value;
+    this.expenseService
+      .updateExpense(this.id, updatedExpense)
+      .then(() => {
+        this.message.success('Expense updated with success', {
+          nzDuration: 3000,
+        });
+        this.router.navigateByUrl('/expense');
+      })
+      .catch(() => {
+        this.message.error('Error while updating expense', {
+          nzDuration: 3000,
+        });
+      });
+  }
 }
