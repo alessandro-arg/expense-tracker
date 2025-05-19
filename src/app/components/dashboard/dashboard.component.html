@@ -1,1 +1,16 @@
-<p>dashboard works!</p>
+<div>
+  <div nz-row>
+    <h3 nz-card-grid nzSpan="8" nz-col [ngStyle]="gridStyle">
+      Balance:
+      <span style="color: slateblue">{{ stats?.balance }} €</span>
+    </h3>
+    <h3 nz-card-grid nzSpan="8" nz-col [ngStyle]="gridStyle">
+      Total income:
+      <span style="color: green">{{ stats?.income }} €</span>
+    </h3>
+    <h3 nz-card-grid nzSpan="8" nz-col [ngStyle]="gridStyle">
+      Total expense:
+      <span style="color: red">{{ stats?.expense }} €</span>
+    </h3>
+  </div>
+</div>

@@ -11,6 +11,13 @@ import { StatsService } from '../../services/stats/stats.service';
   styleUrl: './dashboard.component.scss',
 })
 export class DashboardComponent {
+  stats: any;
+
+  gridStyle = {
+    width: '25%',
+    textAlign: 'center',
+  };
+
   constructor(private statsService: StatsService) {
     this.getStats();
   }
@@ -18,6 +25,7 @@ export class DashboardComponent {
   getStats() {
     this.statsService.getStats().subscribe((stats) => {
       console.log('Stats:', stats);
+      this.stats = stats;
     });
   }
 }
