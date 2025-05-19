@@ -16,7 +16,12 @@ export class IncomeService {
   constructor(private firestore: Firestore) {}
 
   postIncome(income: any): Promise<any> {
-    const incomeRef = collection(this.firestore, 'income');
-    return addDoc(incomeRef, income);
+    const incomesRef = collection(this.firestore, 'incomes');
+    return addDoc(incomesRef, income);
+  }
+
+  getAllIncomes(): Observable<any[]> {
+    const incomesRef = collection(this.firestore, 'incomes');
+    return collectionData(incomesRef, { idField: 'id' });
   }
 }

@@ -15,6 +15,8 @@ import { IncomeService } from '../../services/income/income.service';
 })
 export class IncomeComponent {
   incomeForm!: FormGroup;
+  incomes: any[] = [];
+
   listOfCategory: any[] = [
     'Salary',
     'Freelancing',
@@ -40,6 +42,8 @@ export class IncomeComponent {
       category: [null, [Validators.required]],
       description: [null, [Validators.required]],
     });
+
+    this.loadIncomes();
   }
 
   submitForm() {
@@ -51,11 +55,19 @@ export class IncomeComponent {
       .postIncome(formValue)
       .then(() => {
         this.message.success('Income posted succefully', { nzDuration: 3000 });
+        this.incomeForm.reset();
       })
       .catch(() => {
         this.message.error('Error while posting the income', {
           nzDuration: 3000,
         });
       });
+  }
+
+  loadIncomes() {
+    this.incomeService.getAllIncomes().subscribe((data) => {
+      this.incomes = data;
+      console.log(this.incomes);
+    });
   }
 }

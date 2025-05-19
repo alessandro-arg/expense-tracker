@@ -82,15 +82,32 @@
         <div nz-card-grid style="width: 100%" *ngFor="let expense of expenses">
           <div nz-row>
             <div nz-col nzSpan="18">
-              {{ expense.amount.toFixed(2).replace(".", ",") }} € -
-              <span nz-icon nzType="message" nzTheme="outline"></span>
+              <span class="expense_amount">
+                -{{ expense.amount.toFixed(2).replace(".", ",") }} €</span
+              >
+              <span
+                nz-icon
+                nzType="message"
+                nzTheme="outline"
+                style="margin-left: 10px"
+              ></span>
               {{ expense.title }}
-              -
-              <span nz-icon nzType="clock-circle" nzTheme="outline"></span>
+
+              <span
+                nz-icon
+                nzType="clock-circle"
+                nzTheme="outline"
+                style="margin-left: 5px"
+              ></span>
               {{ expense.date.toDate() | date : "dd/MM/yyyy" }}
               {{ expense.date.toDate() | date : "HH:mm" }}
-              -
-              <span nz-icon nzType="comment" nzTheme="outline"></span>
+
+              <span
+                nz-icon
+                nzType="comment"
+                nzTheme="outline"
+                style="margin-left: 5px"
+              ></span>
               {{ expense.category }}
             </div>
             <div nz-col nzSpan="6" style="font-size: 15px">
@@ -105,7 +122,7 @@
                 nz-icon
                 nzType="delete"
                 nzTheme="fill"
-                style="color: rgb(255, 66, 66); margin-left: 10px"
+                style="color: rgb(255, 66, 66); margin-left: 20px"
                 (click)="deleteExpense(expense.id)"
               ></span>
             </div>

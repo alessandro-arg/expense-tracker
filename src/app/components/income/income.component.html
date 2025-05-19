@@ -77,5 +77,56 @@
         </form>
       </nz-card>
     </div>
+    <div nz-col nzFlex="3" style="margin-left: 20px">
+      <nz-card nzType="inner" style="margin-top: 16px" nzTitle="Last incomes">
+        <div nz-card-grid style="width: 100%" *ngFor="let income of incomes">
+          <div nz-row>
+            <div nz-col nzSpan="18">
+              <span class="income_amount">
+                +{{ income.amount.toFixed(2).replace(".", ",") }} €</span
+              >
+              <span
+                nz-icon
+                nzType="message"
+                nzTheme="outline"
+                style="margin-left: 10px"
+              ></span>
+              {{ income.title }}
+
+              <span
+                nz-icon
+                nzType="clock-circle"
+                nzTheme="outline"
+                style="margin-left: 5px"
+              ></span>
+              {{ income.date.toDate() | date : "dd/MM/yyyy" }}
+              {{ income.date.toDate() | date : "HH:mm" }}
+
+              <span
+                nz-icon
+                nzType="comment"
+                nzTheme="outline"
+                style="margin-left: 5px"
+              ></span>
+              {{ income.category }}
+            </div>
+            <div nz-col nzSpan="6" style="font-size: 15px">
+              <span
+                nz-icon
+                nzType="edit"
+                nzTheme="fill"
+                style="color: rgb(96, 96, 255)"
+              ></span>
+              <span
+                nz-icon
+                nzType="delete"
+                nzTheme="fill"
+                style="color: rgb(255, 66, 66); margin-left: 20px"
+              ></span>
+            </div>
+          </div>
+        </div>
+      </nz-card>
+    </div>
   </div>
 </div>
