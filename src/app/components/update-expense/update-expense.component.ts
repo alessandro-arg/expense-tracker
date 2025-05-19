@@ -14,7 +14,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './update-expense.component.scss',
 })
 export class UpdateExpenseComponent {
-  expenseFrom!: FormGroup;
+  expenseForm!: FormGroup;
   expenses: any[] = [];
   id: string = this.activatedRoute.snapshot.params['id'];
 
@@ -38,7 +38,7 @@ export class UpdateExpenseComponent {
   ) {}
 
   ngOnInit() {
-    this.expenseFrom = this.fb.group({
+    this.expenseForm = this.fb.group({
       title: [null, Validators.required],
       amount: [null, Validators.required],
       date: [null, Validators.required],
@@ -56,7 +56,7 @@ export class UpdateExpenseComponent {
           ...response,
           date: response.date?.toDate?.() || new Date(response.date),
         };
-        this.expenseFrom.patchValue(patchedExpense);
+        this.expenseForm.patchValue(patchedExpense);
       },
       error: () => {
         this.message.error('Something went wrong.', {
@@ -67,7 +67,7 @@ export class UpdateExpenseComponent {
   }
 
   submitForm() {
-    const updatedExpense = this.expenseFrom.value;
+    const updatedExpense = this.expenseForm.value;
     this.expenseService
       .updateExpense(this.id, updatedExpense)
       .then(() => {

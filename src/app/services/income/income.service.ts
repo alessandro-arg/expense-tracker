@@ -24,4 +24,9 @@ export class IncomeService {
     const incomesRef = collection(this.firestore, 'incomes');
     return collectionData(incomesRef, { idField: 'id' });
   }
+
+  getIncomeById(id: string): Observable<any> {
+    const IncomeDocRef = doc(this.firestore, 'incomes', id);
+    return docData(IncomeDocRef, { idField: 'id' });
+  }
 }
