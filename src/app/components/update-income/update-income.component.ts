@@ -2,18 +2,18 @@ import { Component } from '@angular/core';
 import { ZORRO_MODULES } from '../../zorro-imports';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { Router, RouterModule } from '@angular/router';
 import { IncomeService } from '../../services/income/income.service';
 
 @Component({
-  selector: 'app-income',
+  selector: 'app-update-income',
   standalone: true,
-  imports: [RouterModule, ZORRO_MODULES, CommonModule],
-  templateUrl: './income.component.html',
-  styleUrl: './income.component.scss',
+  imports: [ZORRO_MODULES, CommonModule],
+  templateUrl: './update-income.component.html',
+  styleUrl: './update-income.component.scss',
 })
-export class IncomeComponent {
+export class UpdateIncomeComponent {
   incomeForm!: FormGroup;
   incomes: any[] = [];
 
@@ -42,32 +42,7 @@ export class IncomeComponent {
       category: [null, [Validators.required]],
       description: [null, [Validators.required]],
     });
-
-    this.loadIncomes();
   }
 
-  submitForm() {
-    const formValue = this.incomeForm.value;
-    const rawAmount = ('' + formValue.amount).replace(',', '.');
-    formValue.amount = Number(parseFloat(rawAmount).toFixed(2));
-
-    this.incomeService
-      .postIncome(formValue)
-      .then(() => {
-        this.message.success('Income posted succefully', { nzDuration: 3000 });
-        this.incomeForm.reset();
-      })
-      .catch(() => {
-        this.message.error('Error while posting the income', {
-          nzDuration: 3000,
-        });
-      });
-  }
-
-  loadIncomes() {
-    this.incomeService.getAllIncomes().subscribe((data) => {
-      this.incomes = data;
-      console.log(this.incomes);
-    });
-  }
+  submitForm() {}
 }
