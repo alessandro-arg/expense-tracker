@@ -45,15 +45,54 @@ export class DashboardComponent {
         datasets: [
           {
             label: 'Income',
-            data: this.incomes.map((income: { amount: any }) => income.amount),
-            borderWidth: 1,
+            data: this.incomes.map((income: any) => ({
+              x: this.formatDate(income.date),
+              y: income.amount,
+              title: income.title,
+            })),
+            borderColor: '#4caf50',
+            backgroundColor: 'rgba(76, 175, 80, 0.1)',
+            tension: 0.4,
+            fill: true,
+            pointRadius: 5,
+            pointHoverRadius: 6,
           },
         ],
       },
       options: {
+        responsive: true,
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: function (context: any) {
+                const point = context.raw;
+                return [`${point.y} €`, `${point.title}`];
+              },
+            },
+          },
+          legend: {
+            labels: {
+              color: '#4caf50',
+              font: {
+                size: 14,
+                weight: 'bold',
+              },
+            },
+          },
+        },
         scales: {
           y: {
             beginAtZero: true,
+            ticks: {
+              callback: (value) => `${value} €`,
+            },
+          },
+          x: {
+            ticks: {
+              autoSkip: true,
+              maxRotation: 45,
+              minRotation: 0,
+            },
           },
         },
       },
@@ -92,7 +131,7 @@ export class DashboardComponent {
     const day = String(jsDate.getDate()).padStart(2, '0');
     const month = String(jsDate.getMonth() + 1).padStart(2, '0');
     const year = jsDate.getFullYear();
-    return `${day}-${month}-${year}`;
+    return `${day}.${month}.${year}`;
   }
 
   getStats() {
