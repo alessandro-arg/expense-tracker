@@ -1,7 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { ZORRO_MODULES } from '../../zorro-imports';
 import { CommonModule } from '@angular/common';
 import { StatsService } from '../../services/stats/stats.service';
+import { CategoryScale } from 'chart.js';
+import Chart from 'chart.js/auto';
+
+Chart.register(CategoryScale);
 
 @Component({
   selector: 'app-dashboard',
@@ -21,9 +25,36 @@ export class DashboardComponent {
     textAlign: 'center',
   };
 
+  @ViewChild('myChart') private chartRef: ElementRef;
+
   constructor(private statsService: StatsService) {
     this.getStats();
     this.getChartData();
+  }
+
+  createLineChart() {
+    const ctx = this.chartRef.nativeElement.getContext('2d');
+
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+        datasets: [
+          {
+            label: '# of Votes',
+            data: [12, 19, 3, 5, 2, 3],
+            borderWidth: 1,
+          },
+        ],
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true,
+          },
+        },
+      },
+    });
   }
 
   getStats() {
@@ -39,6 +70,8 @@ export class DashboardComponent {
         this.incomes = stats.incomeList;
         this.expenses = stats.expenseList;
         console.log(stats);
+
+        this.createLineChart();
       }
     });
   }
