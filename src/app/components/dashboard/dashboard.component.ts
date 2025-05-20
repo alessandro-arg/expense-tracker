@@ -20,6 +20,9 @@ export class DashboardComponent {
   expenses: any;
   incomes: any;
 
+  incomeChart: Chart | null = null;
+  expenseChart: Chart | null = null;
+
   gridStyle = {
     width: '25%',
     textAlign: 'center',
@@ -33,10 +36,21 @@ export class DashboardComponent {
     this.getChartData();
   }
 
-  createLineChart() {
-    const incomeCtx = this.incomeLineChartRef.nativeElement.getContext('2d');
+  ngOnDestroy(): void {
+    if (this.incomeChart) this.incomeChart.destroy();
+    if (this.expenseChart) this.expenseChart.destroy();
+  }
 
-    new Chart(incomeCtx, {
+  createLineChart() {
+    if (this.incomeChart) {
+      this.incomeChart.destroy();
+    }
+    if (this.expenseChart) {
+      this.expenseChart.destroy();
+    }
+
+    const incomeCtx = this.incomeLineChartRef.nativeElement.getContext('2d');
+    this.incomeChart = new Chart(incomeCtx, {
       type: 'line',
       data: {
         labels: this.incomes.map((income: { date: any }) =>
@@ -61,6 +75,7 @@ export class DashboardComponent {
       },
       options: {
         responsive: true,
+        maintainAspectRatio: false,
         plugins: {
           tooltip: {
             callbacks: {
@@ -99,8 +114,7 @@ export class DashboardComponent {
     });
 
     const expenseCtx = this.expenseLineChartRef.nativeElement.getContext('2d');
-
-    new Chart(expenseCtx, {
+    this.expenseChart = new Chart(expenseCtx, {
       type: 'line',
       data: {
         labels: this.expenses.map((expense: { date: any }) =>
@@ -110,16 +124,56 @@ export class DashboardComponent {
           {
             label: 'Expense',
             data: this.expenses.map(
-              (expense: { amount: any }) => expense.amount
+              (expense: { amount: any; date: any; title: string }) => ({
+                x: this.formatDate(expense.date),
+                y: expense.amount,
+                title: expense.title,
+              })
             ),
-            borderWidth: 1,
+            borderColor: '#f44336',
+            backgroundColor: 'rgba(244, 67, 54, 0.1)',
+            tension: 0.4,
+            fill: true,
+            pointRadius: 5,
+            pointHoverRadius: 6,
           },
         ],
       },
       options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: function (context: any) {
+                const point = context.raw;
+                return [`${point.y} €`, `${point.title}`];
+              },
+            },
+          },
+          legend: {
+            labels: {
+              color: '#f44336',
+              font: {
+                size: 14,
+                weight: 'bold',
+              },
+            },
+          },
+        },
         scales: {
           y: {
             beginAtZero: true,
+            ticks: {
+              callback: (value) => `${value} €`,
+            },
+          },
+          x: {
+            ticks: {
+              autoSkip: true,
+              maxRotation: 45,
+              minRotation: 0,
+            },
           },
         },
       },
@@ -136,7 +190,6 @@ export class DashboardComponent {
 
   getStats() {
     this.statsService.getStats().subscribe((stats) => {
-      console.log('Stats:', stats);
       this.stats = stats;
     });
   }
@@ -146,7 +199,6 @@ export class DashboardComponent {
       if (stats.expenseList != null && stats.incomeList != null) {
         this.incomes = stats.incomeList;
         this.expenses = stats.expenseList;
-        console.log(stats);
 
         this.createLineChart();
       }
