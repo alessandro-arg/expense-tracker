@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { Router, RouterModule } from '@angular/router';
 import { IncomeService } from '../../services/income/income.service';
+import { Timestamp } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-income',
@@ -50,6 +51,12 @@ export class IncomeComponent {
     const formValue = this.incomeForm.value;
     const rawAmount = ('' + formValue.amount).replace(',', '.');
     formValue.amount = Number(parseFloat(rawAmount).toFixed(2));
+
+    if (formValue.date instanceof Date) {
+      formValue.date = Timestamp.fromDate(formValue.date);
+    } else {
+      formValue.date = Timestamp.fromDate(new Date(formValue.date));
+    }
 
     this.incomeService
       .postIncome(formValue)

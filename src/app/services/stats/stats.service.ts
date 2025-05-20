@@ -67,4 +67,26 @@ export class StatsService {
   private getBalance(expenses: any[], incomes: any[]): number {
     return this.getTotal(incomes) - this.getTotal(expenses);
   }
+
+  getChart(): Observable<any> {
+    const expensesRef = query(
+      collection(this.firestore, 'expenses'),
+      orderBy('date', 'desc')
+    );
+
+    const incomesRef = query(
+      collection(this.firestore, 'incomes'),
+      orderBy('date', 'desc')
+    );
+
+    const expenses$ = collectionData(expensesRef, { idField: 'id' });
+    const incomes$ = collectionData(incomesRef, { idField: 'id' });
+
+    return combineLatest([expenses$, incomes$]).pipe(
+      map(([expenses, incomes]) => ({
+        expenseList: [...expenses].reverse(),
+        incomeList: [...incomes].reverse(),
+      }))
+    );
+  }
 }

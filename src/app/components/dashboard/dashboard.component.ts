@@ -13,6 +13,9 @@ import { StatsService } from '../../services/stats/stats.service';
 export class DashboardComponent {
   stats: any;
 
+  expenses: any;
+  incomes: any;
+
   gridStyle = {
     width: '25%',
     textAlign: 'center',
@@ -20,12 +23,23 @@ export class DashboardComponent {
 
   constructor(private statsService: StatsService) {
     this.getStats();
+    this.getChartData();
   }
 
   getStats() {
     this.statsService.getStats().subscribe((stats) => {
       console.log('Stats:', stats);
       this.stats = stats;
+    });
+  }
+
+  getChartData() {
+    this.statsService.getChart().subscribe((stats) => {
+      if (stats.expenseList != null && stats.incomeList != null) {
+        this.incomes = stats.incomeList;
+        this.expenses = stats.expenseList;
+        console.log(stats);
+      }
     });
   }
 }

@@ -5,6 +5,7 @@ import { ZORRO_MODULES } from '../../zorro-imports';
 import { ExpenseService } from '../../services/expense/expense.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { CommonModule } from '@angular/common';
+import { Timestamp } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-expense',
@@ -51,6 +52,12 @@ export class ExpenseComponent {
     const formValue = this.expenseFrom.value;
     const rawAmount = ('' + formValue.amount).replace(',', '.');
     formValue.amount = Number(parseFloat(rawAmount).toFixed(2));
+
+    if (formValue.date instanceof Date) {
+      formValue.date = Timestamp.fromDate(formValue.date);
+    } else {
+      formValue.date = Timestamp.fromDate(new Date(formValue.date));
+    }
 
     this.expenseService
       .postExpense(formValue)
