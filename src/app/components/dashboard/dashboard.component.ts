@@ -25,7 +25,8 @@ export class DashboardComponent {
     textAlign: 'center',
   };
 
-  @ViewChild('myChart') private chartRef: ElementRef;
+  @ViewChild('incomeLineChartRef') private incomeLineChartRef: ElementRef;
+  @ViewChild('expenseLineChartRef') private expenseLineChartRef: ElementRef;
 
   constructor(private statsService: StatsService) {
     this.getStats();
@@ -33,16 +34,18 @@ export class DashboardComponent {
   }
 
   createLineChart() {
-    const ctx = this.chartRef.nativeElement.getContext('2d');
+    const incomeCtx = this.incomeLineChartRef.nativeElement.getContext('2d');
 
-    new Chart(ctx, {
-      type: 'bar',
+    new Chart(incomeCtx, {
+      type: 'line',
       data: {
-        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+        labels: this.incomes.map((income: { date: any }) =>
+          this.formatDate(income.date)
+        ),
         datasets: [
           {
-            label: '# of Votes',
-            data: [12, 19, 3, 5, 2, 3],
+            label: 'Income',
+            data: this.incomes.map((income: { amount: any }) => income.amount),
             borderWidth: 1,
           },
         ],
@@ -55,6 +58,41 @@ export class DashboardComponent {
         },
       },
     });
+
+    const expenseCtx = this.expenseLineChartRef.nativeElement.getContext('2d');
+
+    new Chart(expenseCtx, {
+      type: 'line',
+      data: {
+        labels: this.expenses.map((expense: { date: any }) =>
+          this.formatDate(expense.date)
+        ),
+        datasets: [
+          {
+            label: 'Expense',
+            data: this.expenses.map(
+              (expense: { amount: any }) => expense.amount
+            ),
+            borderWidth: 1,
+          },
+        ],
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true,
+          },
+        },
+      },
+    });
+  }
+
+  formatDate(date: any): string {
+    const jsDate = date?.toDate ? date.toDate() : new Date(date);
+    const day = String(jsDate.getDate()).padStart(2, '0');
+    const month = String(jsDate.getMonth() + 1).padStart(2, '0');
+    const year = jsDate.getFullYear();
+    return `${day}-${month}-${year}`;
   }
 
   getStats() {
