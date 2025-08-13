@@ -11,5 +11,10 @@ import { ZORRO_MODULES } from './zorro-imports';
   styleUrl: './app.component.scss',
 })
 export class AppComponent {
+  isCollapsed = false;
   title = 'expense-tracker';
+
+  toggleMenu() {
+    this.isCollapsed = !this.isCollapsed;
+  }
 }

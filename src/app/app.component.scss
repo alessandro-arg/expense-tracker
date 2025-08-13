@@ -1,18 +1,48 @@
+:root {
+  --brand: #7c4dff;
+  --brand-2: #00e5ff;
+  --ok: #43a047;
+  --warn: #ff7043;
+  --bad: #ef5350;
+  --ink: #0f172a;
+  --bg: #0b1020;
+  --card: #121a33;
+}
+
+.layout {
+  min-height: 100vh;
+  background: radial-gradient(
+      1200px 700px at -10% -10%,
+      rgba(124, 77, 255, 0.35),
+      transparent 65%
+    ),
+    radial-gradient(
+      1000px 600px at 120% 10%,
+      rgba(0, 229, 255, 0.25),
+      transparent 60%
+    ),
+    linear-gradient(180deg, #0b1020 0%, #0b1020 100%);
+  color: #e6e9f2;
+}
+
+.sider {
+  box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.06);
+}
+
 .logo {
   display: flex;
   align-items: center;
-  height: 60px;
-  background: rgba(255, 255, 255, 0.2);
-  margin: 16px;
-  padding: 0 16px;
-  color: white;
+  gap: 12px;
+  padding: 16px 16px 8px;
+  color: #fff;
+  background: transparent;
 }
 
 .avatar {
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
-  margin-right: 10px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
 }
 
 .user-info {
@@ -22,43 +52,68 @@
   strong {
     font-size: 16px;
   }
-
   span {
     font-size: 13px;
+    opacity: 0.85;
   }
 }
 
-.layout {
-  min-height: 100vh;
-}
-
-nz-sider {
-  overflow: auto;
-  height: 100%;
-  position: fixed;
-  left: 0;
-}
-
 .right-layout {
-  margin-left: 200px;
+  margin-left: 0;
+  background: transparent;
 }
 
 nz-header {
-  padding: 0;
-  height: 75px;
+  padding: 0 16px;
+  height: 64px;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.app-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  color: white;
 }
 
 nz-content {
-  margin: 24px 16px 0;
+  margin: 0;
   overflow: initial;
 }
 
 .inner-content {
-  padding: 24px;
-  background-color: white;
-  text-align: center;
+  padding: clamp(12px, 2vw, 20px);
+  background: transparent;
+  text-align: left;
 }
 
-nz-footer {
-  text-align: center;
+.ant-card {
+  background: var(--card);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.ant-card-head {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.ant-card-head-title {
+  color: #f3f5ff;
+  font-weight: 700;
+}
+
+.ant-list-item-meta-title {
+  color: #e9ecff;
+  font-weight: 700;
+}
+
+@media (max-width: 991.98px) {
+  nz-header {
+    height: 56px;
+  }
 }
