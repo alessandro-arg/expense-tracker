@@ -1,0 +1,128 @@
+:host {
+  display: block;
+  height: 100%; /* fills inner-content's 100% */
+}
+
+.dash {
+  height: 100%;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 16px;
+
+  .kpi-row {
+    margin-top: 0;
+  }
+  .main-row {
+    height: 100%;
+    min-height: 0;
+    align-items: stretch;
+  }
+
+  /* columns fill height */
+  .col-fill {
+    height: 100%;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* any “main” card should expand to fill */
+  .card-fill {
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+
+    :host ::ng-deep .ant-card-body {
+      flex: 1 1 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 0; /* lets .chart-wrap grow */
+      padding-top: 8px; /* tighter */
+    }
+  }
+
+  .kpi {
+    display: grid;
+    gap: 6px;
+    .kpi-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      opacity: 0.8;
+    }
+    .kpi-value {
+      font-size: clamp(20px, 3vw, 28px);
+      font-weight: 800;
+      line-height: 1.1;
+      &.balance {
+        color: #7c4dff;
+      }
+      &.income {
+        color: #00e5ff;
+      }
+      &.expense {
+        color: #ef5350;
+      }
+    }
+  }
+
+  .tabs-minimal {
+    :host ::ng-deep .ant-tabs-nav {
+      margin: 0 0 8px 0;
+    }
+  }
+
+  /* Chart area fills the remaining card space */
+  .chart-wrap {
+    position: relative;
+    flex: 1 1 0;
+    min-height: 0;
+    height: 100%;
+  }
+
+  .mt-10 {
+    margin-top: 10px;
+  }
+}
+
+/* subtle headings and separators */
+:host ::ng-deep .ant-list-item-meta-title {
+  color: #e9ecff;
+  font-weight: 700;
+}
+
+:host ::ng-deep .ant-card-head {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+:host ::ng-deep .ant-tabs,
+:host ::ng-deep .ant-tabs-content-holder,
+:host ::ng-deep .ant-tabs-content,
+:host ::ng-deep .ant-tabs-tabpane {
+  height: 100%;
+  min-height: 0;
+}
+
+:host ::ng-deep nz-card.card-fill {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+:host ::ng-deep nz-card.card-fill .ant-card-body {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 0; /* critical for the canvas to fill */
+  padding-top: 8px;
+}
+
+@media (max-width: 991.98px) {
+  :host,
+  .dash {
+    height: auto;
+  }
+  .chart-wrap {
+    min-height: 260px;
+    height: clamp(260px, 40vh, 380px);
+  }
+}

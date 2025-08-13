@@ -1,46 +1,77 @@
-<div>
-  <div nz-row>
-    <h3 nz-card-grid nzSpan="8" nz-col [ngStyle]="gridStyle">
-      Balance:
-      <span style="color: slateblue">{{ stats?.balance }}€</span>
-    </h3>
-    <h3 nz-card-grid nzSpan="8" nz-col [ngStyle]="gridStyle">
-      Total income:
-      <span style="color: green">{{ stats?.income }}€</span>
-    </h3>
-    <h3 nz-card-grid nzSpan="8" nz-col [ngStyle]="gridStyle">
-      Total expense:
-      <span style="color: red">{{ stats?.expense }}€</span>
-    </h3>
-  </div>
-  <div nz-row [nzGutter]="16" style="margin-top: 20px; flex-wrap: nowrap">
-    <div nz-col [nzSpan]="16">
-      <nz-card nzType="inner" nzTitle="Income chart">
-        <canvas #incomeLineChartRef style="height: 335px"></canvas>
+<div class="dash">
+  <!-- Top KPIs -->
+  <div nz-row [nzGutter]="16" class="kpi-row">
+    <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
+      <nz-card>
+        <div class="kpi">
+          <div class="kpi-label">Balance</div>
+          <div class="kpi-value balance">{{ stats?.balance }}€</div>
+        </div>
       </nz-card>
     </div>
-    <div nz-col [nzSpan]="8">
-      <nz-card nzType="inner" nzTitle="Recent transitions">
-        <div nz-card-grid style="width: 100%">
-          <span style="color: green">
-            +{{ stats?.lastIncome?.amount }}€ {{ stats?.lastIncome?.title }}
-          </span>
-        </div>
-        <div nz-card-grid style="width: 100%">
-          <span style="color: red">
-            -{{ stats?.lastExpense?.amount }}€ {{ stats?.lastExpense?.title }}
-          </span>
+    <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
+      <nz-card>
+        <div class="kpi">
+          <div class="kpi-label">Total income</div>
+          <div class="kpi-value income">{{ stats?.income }}€</div>
         </div>
       </nz-card>
+    </div>
+    <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
+      <nz-card>
+        <div class="kpi">
+          <div class="kpi-label">Total expense</div>
+          <div class="kpi-value expense">{{ stats?.expense }}€</div>
+        </div>
+      </nz-card>
+    </div>
+  </div>
 
-      <nz-card nzType="inner" nzTitle="Income" style="margin-top: 10px">
+  <!-- Charts + side info -->
+  <div nz-row [nzGutter]="16" class="main-row">
+    <!-- LEFT: make this column and card stretch -->
+    <div nz-col [nzXs]="24" [nzLg]="16" class="col-fill">
+      <nz-card nzTitle="Income chart" class="card-fill">
+        <div class="chart-wrap">
+          <canvas #incomeLineChartRef></canvas>
+        </div>
+      </nz-card>
+    </div>
+
+    <div nz-col [nzXs]="24" [nzLg]="8">
+      <nz-card nzTitle="Recent transactions">
+        <nz-list [nzItemLayout]="'horizontal'">
+          <nz-list-item>
+            <nz-list-item-meta
+              nzDescription="Latest income"
+              nzTitle="
+                +{{ stats?.lastIncome?.amount }}€ - {{
+                stats?.lastIncome?.title
+              }}
+              "
+            ></nz-list-item-meta>
+          </nz-list-item>
+          <nz-list-item>
+            <nz-list-item-meta
+              nzDescription="Latest expense"
+              nzTitle="
+                -{{ stats?.lastExpense?.amount }}€ - {{
+                stats?.lastExpense?.title
+              }}
+              "
+            ></nz-list-item-meta>
+          </nz-list-item>
+        </nz-list>
+      </nz-card>
+
+      <nz-card nzTitle="Income stats" class="mt-10">
         <div nz-row>
           <div nz-col [nzSpan]="12">Min: {{ stats?.minIncome }}€</div>
           <div nz-col [nzSpan]="12">Max: {{ stats?.maxIncome }}€</div>
         </div>
       </nz-card>
 
-      <nz-card nzType="inner" nzTitle="Expense" style="margin-top: 10px">
+      <nz-card nzTitle="Expense stats" class="mt-10">
         <div nz-row>
           <div nz-col [nzSpan]="12">Min: {{ stats?.minExpense }}€</div>
           <div nz-col [nzSpan]="12">Max: {{ stats?.maxExpense }}€</div>
@@ -48,10 +79,14 @@
       </nz-card>
     </div>
   </div>
-  <div nz-row style="margin-top: 20px">
-    <div nz-col nzFlex="1 1 200px">
-      <nz-card nzType="inner" nzTitle="Expense chart">
-        <canvas #expenseLineChartRef style="height: 335px"></canvas>
+
+  <!-- Expense chart full width on mobile -->
+  <div nz-row [nzGutter]="16" class="mt-16">
+    <div nz-col [nzXs]="24">
+      <nz-card nzTitle="Expense chart">
+        <div class="chart-wrap">
+          <canvas #expenseLineChartRef></canvas>
+        </div>
       </nz-card>
     </div>
   </div>

@@ -1,4 +1,10 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  ViewChild,
+  AfterViewInit,
+  OnDestroy,
+} from '@angular/core';
 import { ZORRO_MODULES } from '../../zorro-imports';
 import { CommonModule } from '@angular/common';
 import { StatsService } from '../../services/stats/stats.service';
@@ -7,6 +13,8 @@ import Chart from 'chart.js/auto';
 
 Chart.register(CategoryScale);
 
+type Tx = { date: any; amount: number; title: string };
+
 @Component({
   selector: 'app-dashboard',
   standalone: true,
@@ -14,170 +22,168 @@ Chart.register(CategoryScale);
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
-export class DashboardComponent {
+export class DashboardComponent implements AfterViewInit, OnDestroy {
   stats: any;
+  expenses: Tx[] = [];
+  incomes: Tx[] = [];
 
-  expenses: any;
-  incomes: any;
+  incomeChart: Chart<'line', number[], string> | null = null;
+  expenseChart: Chart<'line', number[], string> | null = null;
 
-  incomeChart: Chart | null = null;
-  expenseChart: Chart | null = null;
-
-  gridStyle = {
-    width: '25%',
-    textAlign: 'center',
-  };
-
-  @ViewChild('incomeLineChartRef') private incomeLineChartRef: ElementRef;
-  @ViewChild('expenseLineChartRef') private expenseLineChartRef: ElementRef;
+  @ViewChild('incomeLineChartRef', { static: false })
+  private incomeLineChartRef!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('expenseLineChartRef', { static: false })
+  private expenseLineChartRef!: ElementRef<HTMLCanvasElement>;
+  private ro?: ResizeObserver;
 
   constructor(private statsService: StatsService) {
     this.getStats();
     this.getChartData();
   }
 
-  ngOnDestroy(): void {
-    if (this.incomeChart) this.incomeChart.destroy();
-    if (this.expenseChart) this.expenseChart.destroy();
+  ngAfterViewInit(): void {
+    this.ro = new ResizeObserver(() => this.redrawCharts());
+    setTimeout(() => {
+      const incomeCanvasParent =
+        this.incomeLineChartRef?.nativeElement?.parentElement;
+      const expenseCanvasParent =
+        this.expenseLineChartRef?.nativeElement?.parentElement;
+      if (incomeCanvasParent) this.ro?.observe(incomeCanvasParent);
+      if (expenseCanvasParent) this.ro?.observe(expenseCanvasParent);
+    });
   }
 
-  createLineChart() {
+  ngOnDestroy(): void {
+    this.destroyCharts();
+    this.ro?.disconnect();
+  }
+
+  private destroyCharts() {
     if (this.incomeChart) {
       this.incomeChart.destroy();
+      this.incomeChart = null;
     }
     if (this.expenseChart) {
       this.expenseChart.destroy();
+      this.expenseChart = null;
+    }
+  }
+
+  private redrawCharts() {
+    if (this.incomes.length && this.expenses.length) {
+      this.createLineCharts();
+    }
+  }
+
+  private createLineCharts() {
+    this.destroyCharts();
+
+    if (
+      !this.incomeLineChartRef?.nativeElement ||
+      !this.expenseLineChartRef?.nativeElement
+    ) {
+      return;
     }
 
-    const incomeCtx = this.incomeLineChartRef.nativeElement.getContext('2d');
-    this.incomeChart = new Chart(incomeCtx, {
-      type: 'line',
-      data: {
-        labels: this.incomes.map((income: { date: any }) =>
-          this.formatDate(income.date)
-        ),
-        datasets: [
-          {
-            label: 'Income',
-            data: this.incomes.map((income: any) => ({
-              x: this.formatDate(income.date),
-              y: income.amount,
-              title: income.title,
-            })),
-            borderColor: '#4caf50',
-            backgroundColor: 'rgba(76, 175, 80, 0.1)',
-            tension: 0.4,
-            fill: true,
-            pointRadius: 5,
-            pointHoverRadius: 6,
-          },
-        ],
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          tooltip: {
-            callbacks: {
-              label: function (context: any) {
-                const point = context.raw;
-                return [`${point.y} €`, `${point.title}`];
+    this.incomeChart = new Chart<'line', number[], string>(
+      this.incomeLineChartRef.nativeElement,
+      {
+        type: 'line',
+        data: {
+          labels: this.incomes.map((i) => this.formatDate(i.date)),
+          datasets: [
+            {
+              label: 'Income',
+              data: this.incomes.map((i) => i.amount), // numbers only
+              borderColor: '#00e5ff',
+              backgroundColor: 'rgba(0, 229, 255, 0.15)',
+              tension: 0.35,
+              fill: true,
+              pointRadius: 4,
+              pointHoverRadius: 6,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            tooltip: {
+              callbacks: {
+                label: (ctx: any) => {
+                  const item = this.incomes[ctx.dataIndex];
+                  return [`${item.amount} €`, item.title];
+                },
               },
             },
+            legend: {
+              labels: { color: '#a5b4fc', font: { size: 13, weight: 'bold' } },
+            },
           },
-          legend: {
-            labels: {
-              color: '#4caf50',
-              font: {
-                size: 14,
-                weight: 'bold',
-              },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: { callback: (v: number) => `${v} €` },
+              grid: { color: 'rgba(255,255,255,.08)' },
+            },
+            x: {
+              ticks: { autoSkip: true, maxRotation: 0 },
+              grid: { display: false },
             },
           },
         },
-        scales: {
-          y: {
-            beginAtZero: true,
-            ticks: {
-              callback: (value) => `${value} €`,
-            },
-          },
-          x: {
-            ticks: {
-              autoSkip: true,
-              maxRotation: 45,
-              minRotation: 0,
-            },
-          },
-        },
-      },
-    });
+      }
+    );
 
-    const expenseCtx = this.expenseLineChartRef.nativeElement.getContext('2d');
-    this.expenseChart = new Chart(expenseCtx, {
-      type: 'line',
-      data: {
-        labels: this.expenses.map((expense: { date: any }) =>
-          this.formatDate(expense.date)
-        ),
-        datasets: [
-          {
-            label: 'Expense',
-            data: this.expenses.map(
-              (expense: { amount: any; date: any; title: string }) => ({
-                x: this.formatDate(expense.date),
-                y: expense.amount,
-                title: expense.title,
-              })
-            ),
-            borderColor: '#f44336',
-            backgroundColor: 'rgba(244, 67, 54, 0.1)',
-            tension: 0.4,
-            fill: true,
-            pointRadius: 5,
-            pointHoverRadius: 6,
-          },
-        ],
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          tooltip: {
-            callbacks: {
-              label: function (context: any) {
-                const point = context.raw;
-                return [`${point.y} €`, `${point.title}`];
+    this.expenseChart = new Chart<'line', number[], string>(
+      this.expenseLineChartRef.nativeElement,
+      {
+        type: 'line',
+        data: {
+          labels: this.expenses.map((e) => this.formatDate(e.date)),
+          datasets: [
+            {
+              label: 'Expense',
+              data: this.expenses.map((e) => e.amount), // numbers only
+              borderColor: '#ef5350',
+              backgroundColor: 'rgba(239, 83, 80, 0.15)',
+              tension: 0.35,
+              fill: true,
+              pointRadius: 4,
+              pointHoverRadius: 6,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            tooltip: {
+              callbacks: {
+                label: (ctx: any) => {
+                  const item = this.expenses[ctx.dataIndex];
+                  return [`${item.amount} €`, item.title];
+                },
               },
             },
+            legend: {
+              labels: { color: '#ffab91', font: { size: 13, weight: 'bold' } },
+            },
           },
-          legend: {
-            labels: {
-              color: '#f44336',
-              font: {
-                size: 14,
-                weight: 'bold',
-              },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: { callback: (v: number) => `${v} €` },
+              grid: { color: 'rgba(255,255,255,.08)' },
+            },
+            x: {
+              ticks: { autoSkip: true, maxRotation: 0 },
+              grid: { display: false },
             },
           },
         },
-        scales: {
-          y: {
-            beginAtZero: true,
-            ticks: {
-              callback: (value) => `${value} €`,
-            },
-          },
-          x: {
-            ticks: {
-              autoSkip: true,
-              maxRotation: 45,
-              minRotation: 0,
-            },
-          },
-        },
-      },
-    });
+      }
+    );
   }
 
   formatDate(date: any): string {
@@ -196,11 +202,10 @@ export class DashboardComponent {
 
   getChartData() {
     this.statsService.getChart().subscribe((stats) => {
-      if (stats.expenseList != null && stats.incomeList != null) {
+      if (stats?.expenseList && stats?.incomeList) {
         this.incomes = stats.incomeList;
         this.expenses = stats.expenseList;
-
-        this.createLineChart();
+        setTimeout(() => this.createLineCharts());
       }
     });
   }
